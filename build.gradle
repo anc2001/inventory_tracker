@@ -8,6 +8,9 @@ group = "com.example"
 
 repositories {
     mavenCentral()
+    flatDir {
+        dirs 'lib'
+    }
 }
 
 micronaut {
@@ -26,7 +29,8 @@ dependencies {
     implementation("jakarta.annotation:jakarta.annotation-api")
     runtimeOnly("ch.qos.logback:logback-classic")
     implementation("io.micronaut:micronaut-validation")
-
+    implementation(files("lib/sqlite-jdbc-3.36.0.3.jar"))
+    implementation("com.googlecode.json-simple:json-simple:1.1.1")
 }
 
 
