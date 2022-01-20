@@ -6,6 +6,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.logging.Filter;
 
+/**
+ * Filter args, can only search on one condition for now
+ */
 @Introspected
 public class FilterArgs {
 

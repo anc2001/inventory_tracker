@@ -13,6 +13,12 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+/**
+ * Controller for Inventory, all endpoints except for /list will return JSONs
+ * Getting and deleting items at endpoint /items/id
+ * Updating and creating at endpoint /items
+ * Filtering at endpoint /items/list?field=field&value=value
+ */
 @ExecuteOn(TaskExecutors.IO)
 @Controller("/items")
 public class InventoryController {

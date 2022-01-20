@@ -6,9 +6,13 @@ import org.json.simple.JSONObject;
 
 import javax.validation.constraints.*;
 
+/**
+ * Fields to update an item with, id must be present
+ */
 @Introspected
 public class ItemUpdateCommand {
-    @Nullable
+
+    @NotNull
     private Integer id;
 
     @Nullable
@@ -19,10 +23,6 @@ public class ItemUpdateCommand {
 
     @Nullable
     private Integer quantity;
-
-    @NotBlank
-    @Pattern(regexp = "id|name|location|quantity")
-    private String condition;
 
     public Integer getId() {
         return id;

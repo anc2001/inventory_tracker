@@ -4,6 +4,7 @@ import jakarta.inject.Singleton;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Singleton
 public class Inventory implements IInventory{
+    //SQlite with RAM memory for now - demonstration purposes
     private static final String url = "jdbc:sqlite::memory:";
     private int itemCounter = 0;
     private Connection conn;
@@ -63,7 +65,7 @@ public class Inventory implements IInventory{
     }
 
     @Override
-    public Integer save(ItemSaveCommand command) throws Exception {
+    public Integer save(@Valid ItemSaveCommand command) throws Exception {
         if (conn != null) {
             int id = itemCounter++;
             String sql = "INSERT INTO main" +
@@ -95,7 +97,7 @@ public class Inventory implements IInventory{
     }
 
     @Override
-    public void update(ItemUpdateCommand command) throws Exception {
+    public void update(@Valid ItemUpdateCommand command) throws Exception {
         if (conn != null) {
             JSONObject obj = command.toJSON();
             if (!(obj.isEmpty())) {
@@ -123,7 +125,7 @@ public class Inventory implements IInventory{
     }
 
     @Override
-    public List<JSONObject> filter(FilterArgs args) throws Exception {
+    public List<JSONObject> filter(@Valid FilterArgs args) throws Exception {
         if (conn != null) {
             ArrayList ok = (ArrayList) args.getValue();
             Object value = ok.get(0);

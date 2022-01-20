@@ -5,6 +5,9 @@ import io.micronaut.core.annotation.Introspected;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
 
+/**
+ * Fields of an item, all must be present (for now)
+ */
 @Introspected
 public class ItemSaveCommand {
     @NotBlank
