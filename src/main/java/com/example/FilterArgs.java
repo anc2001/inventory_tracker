@@ -2,31 +2,29 @@ package com.example;
 
 import io.micronaut.core.annotation.Introspected;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.logging.Filter;
 
 @Introspected
-public class FilterCommand {
+public class FilterArgs {
 
-    @NotBlank
+    @NotNull
+    @Pattern(regexp = "id|name|location|quantity")
     private String field;
 
     @NotNull
     private Object value;
 
-    public FilterCommand() {}
+    public FilterArgs() {}
 
-    public FilterCommand(@NotBlank  String field, @NotNull Object value) {
-        this.field = field;
-        this.value = value;
-    }
+    public FilterArgs(String field, Object value) {}
 
     public String getField() {
         return field;
     }
 
-    public void setField(String field) {
+    public void setField(@NotNull String field) {
         this.field = field;
     }
 
@@ -34,8 +32,7 @@ public class FilterCommand {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(@NotNull Object value) {
         this.value = value;
     }
-
 }

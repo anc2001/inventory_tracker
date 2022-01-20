@@ -7,10 +7,10 @@ import io.micronaut.scheduling.annotation.ExecuteOn;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 @ExecuteOn(TaskExecutors.IO)
@@ -37,19 +37,14 @@ public class InventoryController {
         return obj;
     }
 
-    @Get("/list/{field}")
+    @Get("/list{?args*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject filter(@NotNull FilterCommand command) {
-        JSONObject obj = new JSONObject();
+    public List<JSONObject> filter(@NotNull FilterArgs args) {
         try {
-            List<JSONObject> filtered = inventory.filter(command.getField(), command.getValue());
-            obj.put("status", "ok");
-            obj.put("items", filtered);
+            return inventory.filter(args);
         } catch (Exception e) {
-            obj.put("status", "failed");
-            obj.put("message", e.getMessage());
+            return null;
         }
-        return obj;
     }
 
     @Delete("/{id}")

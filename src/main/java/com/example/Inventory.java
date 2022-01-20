@@ -1,16 +1,13 @@
 package com.example;
 
 import jakarta.inject.Singleton;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.junit.Test;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Singleton
 public class Inventory implements IInventory{
@@ -100,23 +97,25 @@ public class Inventory implements IInventory{
     @Override
     public void update(ItemUpdateCommand command) throws Exception {
         if (conn != null) {
-            String sql= "UPDATE main SET ";
-            String end = "WHERE id = " + command.getId();
             JSONObject obj = command.toJSON();
-            ArrayList<String> accum = new ArrayList<String>();
-            for (Object key : obj.keySet()) {
-                if (!key.toString().equals("id")) {
-                    if (key.toString().equals("name") || key.toString().equals("location")) {
-                        accum.add(key + " = " + "'" +obj.get(key) + "'");
-                    } else {
-                        accum.add(key + " = " + obj.get(key));
+            if (!(obj.isEmpty())) {
+                String sql= "UPDATE main SET ";
+                String end = "WHERE id = " + command.getId();
+                ArrayList<String> accum = new ArrayList<String>();
+                for (Object key : obj.keySet()) {
+                    if (!key.toString().equals("id")) {
+                        if (key.toString().equals("name") || key.toString().equals("location")) {
+                            accum.add(key + " = " + "'" +obj.get(key) + "'");
+                        } else {
+                            accum.add(key + " = " + obj.get(key));
+                        }
                     }
                 }
+                String toAppend = String.join(",", accum);
+                sql += toAppend + " " + end;
+                Statement stmt = conn.createStatement();
+                stmt.execute(sql);
             }
-            String toAppend = String.join(",", accum);
-            sql += toAppend + " " + end;
-            Statement stmt = conn.createStatement();
-            stmt.execute(sql);
         } else {
             System.out.println("Connection not established");
             throw new Exception("Connection not established");
@@ -124,28 +123,27 @@ public class Inventory implements IInventory{
     }
 
     @Override
-    public List<JSONObject> filter(String field, Object value) throws Exception {
+    public List<JSONObject> filter(FilterArgs args) throws Exception {
         if (conn != null) {
-            String sql = "SELECT * FROM main WHERE" + field + "= " + value.toString();
+            ArrayList ok = (ArrayList) args.getValue();
+            Object value = ok.get(0);
+            String sql = "SELECT * FROM main WHERE " + args.getField() + " = '" + value + "'";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            ArrayList<JSONObject> toReturn = new ArrayList<>();
+            ArrayList<JSONObject> toReturn = new JSONArray();
             while (rs.next()) {
                 JSONObject temp = new JSONObject();
                 temp.put("id", rs.getInt("id"));
                 temp.put("name", rs.getString("name"));
                 temp.put("location", rs.getString("location"));
                 temp.put("quantity", rs.getInt("quantity"));
+                toReturn.add(temp);
             }
             return toReturn;
         } else {
             System.out.println("Connection not established");
             throw new Exception("Connection not established");
         }
-    }
-
-    public static void main(String[] args) {
-        
     }
 
 }

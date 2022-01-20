@@ -1,28 +1,34 @@
 package com.example;
 
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Nullable;
 import org.json.simple.JSONObject;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.*;
 
 @Introspected
 public class ItemUpdateCommand {
-    @NotNull
+    @Nullable
     private Integer id;
 
+    @Nullable
     private String name;
 
+    @Nullable
     private String location;
 
+    @Nullable
     private Integer quantity;
+
+    @NotBlank
+    @Pattern(regexp = "id|name|location|quantity")
+    private String condition;
 
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(@NotNull Integer id) {
         this.id = id;
     }
 
@@ -30,7 +36,7 @@ public class ItemUpdateCommand {
         return name;
     }
 
-    public void setName(@NotBlank String name) {
+    public void setName(@Nullable String name) {
         this.name = name;
     }
 
@@ -38,7 +44,7 @@ public class ItemUpdateCommand {
         return location;
     }
 
-    public void setLocation(@NotBlank String location) {
+    public void setLocation(@Nullable String location) {
         this.location = location;
     }
 
@@ -46,7 +52,7 @@ public class ItemUpdateCommand {
         return quantity;
     }
 
-    public void setQuantity(@PositiveOrZero Integer quantity) {
+    public void setQuantity(@Nullable Integer quantity) {
         this.quantity = quantity;
     }
 
@@ -67,6 +73,9 @@ public class ItemUpdateCommand {
 
     public JSONObject toJSON() {
         JSONObject toReturn = new JSONObject();
+        if (this.name != null) {
+            toReturn.put("id", this.id);
+        }
         toReturn.put("id", this.id);
         if (this.name != null) {
             toReturn.put("name", this.name);
